@@ -18,6 +18,7 @@ import com.rey.material.widget.Spinner;
 import toe.com.toedailyandroid.Adapter.NavTabPagerAdapter;
 import toe.com.toedailyandroid.Entity.Mood;
 import toe.com.toedailyandroid.R;
+import toe.com.toedailyandroid.Service.MoodService;
 
 
 public class NewMoodActivity extends AppCompatActivity {
@@ -44,30 +45,16 @@ public class NewMoodActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mMoodTypeSpin.setAdapter(adapter);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(NewMoodActivity.this);
-        String uid = prefs.getString("uid", null);
-        Toast.makeText(NewMoodActivity.this, uid, Toast.LENGTH_SHORT).show();
         mSubmitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String moodType = mMoodTypeSpin.getSelectedItem().toString();
                 String moodContent = mMoodContentET.getText().toString();
-                Firebase ref = new Firebase("https://toedailyandroid.firebaseio.com");
-                Firebase moodRef = ref.child("mood");
                 Mood mood = new Mood();
                 mood.setMoodType(moodType);
                 mood.setMoodContent(moodContent);
-                moodRef.push().setValue(mood, new Firebase.CompletionListener() {
-                    @Override
-                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                        if(firebaseError == null) {
-                            Toast.makeText(NewMoodActivity.this, "Add mood successfully!", Toast.LENGTH_SHORT).show();
-                            finish();
-                        } else {
-                            Toast.makeText(NewMoodActivity.this, firebaseError.getMessage().toString(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                MoodService moodService = new MoodService(NewMoodActivity.this);
+                moodService.newMood(mood);
             }
         });
     }

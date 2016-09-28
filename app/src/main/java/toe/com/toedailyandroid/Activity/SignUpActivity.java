@@ -14,6 +14,7 @@ import com.firebase.client.FirebaseError;
 import com.roger.catloadinglibrary.CatLoadingView;
 
 import toe.com.toedailyandroid.R;
+import toe.com.toedailyandroid.Service.UserService;
 import toe.com.toedailyandroid.Utils.TextValidator;
 
 
@@ -75,32 +76,19 @@ public class SignUpActivity extends AppCompatActivity {
                 String email = mEmailEditText.getText().toString();
                 String pwd = mPwdEditText.getText().toString();
                 String rePwd = mRePwdEditText.getText().toString();
-                if(TextUtils.isEmpty(email)) {
+                if(TextUtils.isEmpty(email))
                     mEmailEditText.setError("This field is required!");
-                }
-                else if(TextUtils.isEmpty(pwd)) {
+                else if(TextUtils.isEmpty(pwd))
                     mPwdEditText.setError("This field is required!");
-                }
-                else if(TextUtils.isEmpty(rePwd)) {
+                else if(TextUtils.isEmpty(rePwd))
                     mRePwdEditText.setError("This field is required!");
-                }
                 else if(TextUtils.equals(pwd, rePwd) == false)
                     mRePwdEditText.setError("Password doesn't match!");
                 else {
-                    Firebase ref = new Firebase("https://toedailyandroid.firebaseio.com");
-                    ref.createUser(email, pwd, new Firebase.ResultHandler() {
-                        @Override
-                        public void onSuccess() {
-                            Toast.makeText(SignUpActivity.this, "Sign up successfully!", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-
-                        @Override
-                        public void onError(FirebaseError firebaseError) {
-                            Toast.makeText(SignUpActivity.this, firebaseError.getMessage().toString(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    UserService userService = new UserService(SignUpActivity.this);
+                    userService.signUp(email, pwd);
                 }
+
             }
         });
         mCancelBtn.setOnClickListener(new View.OnClickListener() {

@@ -18,6 +18,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
 import toe.com.toedailyandroid.R;
+import toe.com.toedailyandroid.Service.UserService;
 import toe.com.toedailyandroid.Utils.TextValidator;
 
 
@@ -38,6 +39,9 @@ public class LoginActivity extends AppCompatActivity {
         mPwdEditText = (EditText)findViewById(R.id.pwd);
         mLoginBtn = (Button)findViewById(R.id.login_btn);
         mSignUpBtn = (Button)findViewById(R.id.sign_up_btn);
+
+        UserService userService = new UserService(LoginActivity.this);
+        userService.tokenAuth();
 
         mEmailEditText.addTextChangedListener(new TextValidator(mEmailEditText) {
             @Override
@@ -60,24 +64,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = mEmailEditText.getText().toString();
                 String pwd = mPwdEditText.getText().toString();
-                Firebase ref = new Firebase("https://toedailyandroid.firebaseio.com");
-                ref.authWithPassword(email, pwd, new Firebase.AuthResultHandler() {
-                    @Override
-                    public void onAuthenticated(AuthData authData) {
-                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putString("uid", authData.getUid());
-                        editor.commit();
-                        finish();
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onAuthenticationError(FirebaseError firebaseError) {
-                        Toast.makeText(LoginActivity.this, firebaseError.getMessage().toString(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                UserService userService = new UserService(LoginActivity.this);
+                userService.login(email, pwd);
             }
         });
 

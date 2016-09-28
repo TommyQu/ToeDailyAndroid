@@ -1,14 +1,17 @@
 package toe.com.toedailyandroid.Activity;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import toe.com.toedailyandroid.Adapter.NavTabPagerAdapter;
 import toe.com.toedailyandroid.R;
+import toe.com.toedailyandroid.Service.UserService;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -31,6 +34,7 @@ public class HomeActivity extends AppCompatActivity {
         mTabLayout.getTabAt(1).setIcon(R.drawable.mood_tab);
         mTabLayout.getTabAt(2).setIcon(R.drawable.schedules_tab);
         mTabLayout.getTabAt(3).setIcon(R.drawable.profile_tab);
+
         for(int i = 0; i < mTabLayout.getTabCount(); i++) {
             if(i == 0)
                 mTabLayout.getTabAt(i).getIcon().setColorFilter(ContextCompat.getColor(HomeActivity.this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
@@ -58,6 +62,5 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-
 
 }

@@ -24,6 +24,12 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <style name="danger_btn_style">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@color/colorAccent</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
     <style name="nav_tab_style" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorColor">@color/colorPrimary</item>
         <item name="tabIndicatorHeight">0dp</item>

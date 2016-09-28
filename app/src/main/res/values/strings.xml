@@ -6,6 +6,7 @@
     <string name="submit">Submit</string>
     <string name="cancel">Cancel</string>
     <string name="home_tab">Home</string>
+    <string name="sign_out">Sign Out</string>
     <string-array name="mood_type_array">
         <item>Happy</item>
         <item>Sad</item>
