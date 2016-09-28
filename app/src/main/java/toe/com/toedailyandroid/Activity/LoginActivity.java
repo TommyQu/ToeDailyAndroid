@@ -1,7 +1,10 @@
 package toe.com.toedailyandroid.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -61,7 +64,13 @@ public class LoginActivity extends AppCompatActivity {
                 ref.authWithPassword(email, pwd, new Firebase.AuthResultHandler() {
                     @Override
                     public void onAuthenticated(AuthData authData) {
-                        Toast.makeText(LoginActivity.this, "Login successfully!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putString("uid", authData.getUid());
+                        editor.commit();
+                        finish();
+                        startActivity(intent);
                     }
 
                     @Override

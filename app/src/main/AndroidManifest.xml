@@ -21,6 +21,12 @@
             android:name=".Activity.SignUpActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
+        <activity
+            android:name=".Activity.HomeActivity">
+        </activity>
+        <activity
+            android:name=".Activity.NewMoodActivity">
+        </activity>
     </application>
 
 </manifest>

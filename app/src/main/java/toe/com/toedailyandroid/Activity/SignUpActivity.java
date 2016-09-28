@@ -28,7 +28,6 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText mEmailEditText;
     private EditText mPwdEditText;
     private EditText mRePwdEditText;
-    private CatLoadingView mLoadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +40,6 @@ public class SignUpActivity extends AppCompatActivity {
         mEmailEditText = (EditText)findViewById(R.id.email);
         mPwdEditText = (EditText)findViewById(R.id.pwd);
         mRePwdEditText = (EditText)findViewById(R.id.re_pwd);
-        mLoadingView = new CatLoadingView();
 
         mEmailEditText.addTextChangedListener(new TextValidator(mEmailEditText) {
             @Override
@@ -89,20 +87,17 @@ public class SignUpActivity extends AppCompatActivity {
                 else if(TextUtils.equals(pwd, rePwd) == false)
                     mRePwdEditText.setError("Password doesn't match!");
                 else {
-                    mLoadingView.show(getSupportFragmentManager(), "");
                     Firebase ref = new Firebase("https://toedailyandroid.firebaseio.com");
                     ref.createUser(email, pwd, new Firebase.ResultHandler() {
                         @Override
                         public void onSuccess() {
                             Toast.makeText(SignUpActivity.this, "Sign up successfully!", Toast.LENGTH_SHORT).show();
-                            mLoadingView.dismiss();
                             finish();
                         }
 
                         @Override
                         public void onError(FirebaseError firebaseError) {
                             Toast.makeText(SignUpActivity.this, firebaseError.getMessage().toString(), Toast.LENGTH_SHORT).show();
-                            mLoadingView.dismiss();
                         }
                     });
                 }

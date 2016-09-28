@@ -6,6 +6,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+    </style>
+
+    <style name="MyActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
     <style name="confirm_btn_style">
@@ -18,4 +23,14 @@
         <item name="android:background">@color/colorWhite</item>
         <item name="android:textSize">15sp</item>
     </style>
+
+    <style name="nav_tab_style" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/colorPrimary</item>
+        <item name="tabIndicatorHeight">0dp</item>
+        <item name="tabPaddingStart">10dp</item>
+        <item name="tabPaddingEnd">10dp</item>
+        <item name="tabBackground">@color/colorGrey</item>
+        <item name="tabSelectedTextColor">@color/colorPrimary</item>
+    </style>
+
 </resources>
