@@ -1,5 +1,6 @@
 package toe.com.toedailyandroid.Activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -22,7 +23,7 @@ import toe.com.toedailyandroid.Utils.TextValidator;
  * Created by HQu on 9/26/2016.
  */
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity implements UserService.SignUpListener{
 
     private Button mSubmitBtn;
     private Button mCancelBtn;
@@ -85,7 +86,7 @@ public class SignUpActivity extends AppCompatActivity {
                 else if(TextUtils.equals(pwd, rePwd) == false)
                     mRePwdEditText.setError("Password doesn't match!");
                 else {
-                    UserService userService = new UserService(SignUpActivity.this);
+                    UserService userService = new UserService(SignUpActivity.this, SignUpActivity.this, "signUp");
                     userService.signUp(email, pwd);
                 }
 
@@ -97,5 +98,16 @@ public class SignUpActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public void signUpSucceed() {
+        Toast.makeText(SignUpActivity.this, "Sign up successfully!", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    @Override
+    public void signUpFail(String errorMsg) {
+        Toast.makeText(SignUpActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
     }
 }

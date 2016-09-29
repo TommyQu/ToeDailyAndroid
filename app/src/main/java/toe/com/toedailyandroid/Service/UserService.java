@@ -11,10 +11,12 @@ import android.widget.Toast;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.google.gson.Gson;
 
 import toe.com.toedailyandroid.Activity.HomeActivity;
 import toe.com.toedailyandroid.Activity.LoginActivity;
 import toe.com.toedailyandroid.Activity.SignUpActivity;
+import toe.com.toedailyandroid.Utils.UserAuthDataManager;
 
 /**
  * Created by HQu on 9/28/2016.
@@ -23,9 +25,41 @@ import toe.com.toedailyandroid.Activity.SignUpActivity;
 public class UserService {
     private static final String TAG = "ToeUserService:";
     private Context mContext;
+    private LoginListener mLoginListener;
+    private TokenAuthListener mTokenAuthListener;
+    private SignUpListener mSignUpListener;
+    private SignOutListener mSignOutListener;
 
-    public UserService(Context context) {
+    public interface LoginListener {
+        public void loginSucceed(AuthData authData);
+        public void loginFail(String errorMsg);
+    }
+
+    public interface TokenAuthListener {
+        public void tokenAuthSucceed();
+        public void tokenAuthFail(String errorMsg);
+    }
+
+    public interface SignUpListener {
+        public void signUpSucceed();
+        public void signUpFail(String errorMsg);
+    }
+
+    public interface SignOutListener {
+        public void signOutSucceed();
+        public void signOutFail(String errorMsg);
+    }
+
+    public UserService(Context context, Object userListener, String action) {
         mContext = context;
+        if(action.equalsIgnoreCase("login"))
+            mLoginListener = (LoginListener)userListener;
+        else if(action.equalsIgnoreCase("signUp"))
+            mSignUpListener = (SignUpListener)userListener;
+        else if(action.equalsIgnoreCase("signOut"))
+            mSignOutListener = (SignOutListener)userListener;
+        else if(action.equalsIgnoreCase("tokenAuth"))
+            mTokenAuthListener = (TokenAuthListener)userListener;
     }
 
     public void login(String email, String pwd) {
@@ -33,39 +67,30 @@ public class UserService {
         ref.authWithPassword(email, pwd, new Firebase.AuthResultHandler() {
             @Override
             public void onAuthenticated(AuthData authData) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString("token", authData.getToken());
-                editor.putString("uid", authData.getUid());
-                editor.commit();
-                Intent intent = new Intent(mContext, HomeActivity.class);
-                ((Activity) mContext).finish();
-                mContext.startActivity(intent);
+                mLoginListener.loginSucceed(authData);
             }
 
             @Override
             public void onAuthenticationError(FirebaseError firebaseError) {
-                Toast.makeText(mContext, firebaseError.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                mLoginListener.loginFail(firebaseError.getMessage().toString());
             }
         });
     }
 
     public void tokenAuth() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String token = prefs.getString("token", null);
-        if(token != null) {
+        UserAuthDataManager authDataManager = new UserAuthDataManager(mContext);
+        AuthData authData = authDataManager.getUserAuthData();
+        if(authData != null) {
             Firebase ref = new Firebase("https://toedailyandroid.firebaseio.com");
-            ref.authWithCustomToken(token, new Firebase.AuthResultHandler() {
+            ref.authWithCustomToken(authData.getToken(), new Firebase.AuthResultHandler() {
                 @Override
                 public void onAuthenticated(AuthData authData) {
-                    Intent intent = new Intent(mContext, HomeActivity.class);
-                    ((Activity) mContext).finish();
-                    mContext.startActivity(intent);
+                    mTokenAuthListener.tokenAuthSucceed();
                 }
 
                 @Override
                 public void onAuthenticationError(FirebaseError firebaseError) {
-                    Toast.makeText(mContext, firebaseError.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                    mTokenAuthListener.tokenAuthFail(firebaseError.getMessage().toString());
                 }
             });
         }
@@ -76,13 +101,12 @@ public class UserService {
         ref.createUser(email, pwd, new Firebase.ResultHandler() {
             @Override
             public void onSuccess() {
-                Toast.makeText(mContext, "Sign up successfully!", Toast.LENGTH_SHORT).show();
-                ((Activity) mContext).finish();
+                mSignUpListener.signUpSucceed();
             }
 
             @Override
             public void onError(FirebaseError firebaseError) {
-                Toast.makeText(mContext, firebaseError.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                mSignUpListener.signUpFail(firebaseError.getMessage().toString());
             }
         });
     }
@@ -90,13 +114,6 @@ public class UserService {
     public void signOut() {
         Firebase ref = new Firebase("https://toedailyandroid.firebaseio.com");
         ref.unauth();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.clear();
-        editor.commit();
-        Intent intent = new Intent(mContext, LoginActivity.class);
-        ((Activity) mContext).finish();
-        mContext.startActivity(intent);
-        Toast.makeText(mContext, "Sign out successfully", Toast.LENGTH_SHORT).show();
+        mSignOutListener.signOutSucceed();
     }
 }

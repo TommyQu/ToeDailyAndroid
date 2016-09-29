@@ -1,5 +1,6 @@
 package toe.com.toedailyandroid.Activity;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -10,18 +11,23 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.rey.material.widget.EditText;
 import com.rey.material.widget.Spinner;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import toe.com.toedailyandroid.Adapter.NavTabPagerAdapter;
 import toe.com.toedailyandroid.Entity.Mood;
 import toe.com.toedailyandroid.R;
 import toe.com.toedailyandroid.Service.MoodService;
+import toe.com.toedailyandroid.Utils.UserAuthDataManager;
 
 
-public class NewMoodActivity extends AppCompatActivity {
+public class NewMoodActivity extends AppCompatActivity implements MoodService.NewMoodListener{
 
     private Spinner mMoodTypeSpin;
     private EditText mMoodContentET;
@@ -48,13 +54,21 @@ public class NewMoodActivity extends AppCompatActivity {
         mSubmitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String moodType = mMoodTypeSpin.getSelectedItem().toString();
-                String moodContent = mMoodContentET.getText().toString();
-                Mood mood = new Mood();
-                mood.setMoodType(moodType);
-                mood.setMoodContent(moodContent);
-                MoodService moodService = new MoodService(NewMoodActivity.this);
-                moodService.newMood(mood);
+                UserAuthDataManager authDataManager = new UserAuthDataManager(NewMoodActivity.this);
+                AuthData authData = authDataManager.getUserAuthData();
+                if(authData != null) {
+                    String moodType = mMoodTypeSpin.getSelectedItem().toString();
+                    String moodContent = mMoodContentET.getText().toString();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date date = new Date();
+                    Mood mood = new Mood();
+                    mood.setMoodType(moodType);
+                    mood.setMoodContent(moodContent);
+                    mood.setCreatedBy(authData.getUid());
+                    mood.setCreatedAt(sdf.format(date));
+                    MoodService moodService = new MoodService(NewMoodActivity.this, NewMoodActivity.this, "newMood");
+                    moodService.newMood(mood);
+                }
             }
         });
     }
@@ -64,5 +78,16 @@ public class NewMoodActivity extends AppCompatActivity {
         if(item.getItemId() == android.R.id.home)
             finish();
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void newMoodSucceed() {
+        Toast.makeText(NewMoodActivity.this, "Add mood successfully!", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    @Override
+    public void newMoodFail(String errorMsg) {
+        Toast.makeText(NewMoodActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
     }
 }

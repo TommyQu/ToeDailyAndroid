@@ -1,5 +1,6 @@
 package toe.com.toedailyandroid.Activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,13 +17,14 @@ import android.widget.Toast;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.google.gson.Gson;
 
 import toe.com.toedailyandroid.R;
 import toe.com.toedailyandroid.Service.UserService;
 import toe.com.toedailyandroid.Utils.TextValidator;
 
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements UserService.LoginListener, UserService.TokenAuthListener{
 
     private EditText mEmailEditText;
     private EditText mPwdEditText;
@@ -40,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         mLoginBtn = (Button)findViewById(R.id.login_btn);
         mSignUpBtn = (Button)findViewById(R.id.sign_up_btn);
 
-        UserService userService = new UserService(LoginActivity.this);
+        UserService userService = new UserService(LoginActivity.this, LoginActivity.this, "tokenAuth");
         userService.tokenAuth();
 
         mEmailEditText.addTextChangedListener(new TextValidator(mEmailEditText) {
@@ -64,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = mEmailEditText.getText().toString();
                 String pwd = mPwdEditText.getText().toString();
-                UserService userService = new UserService(LoginActivity.this);
+                UserService userService = new UserService(LoginActivity.this, LoginActivity.this, "login");
                 userService.login(email, pwd);
             }
         });
@@ -78,4 +80,33 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void loginSucceed(AuthData authData) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+        SharedPreferences.Editor editor = prefs.edit();
+        Gson gson = new Gson();
+        String userCookie = gson.toJson(authData);
+        editor.putString("userCookie", userCookie);
+        editor.commit();
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        finish();
+        startActivity(intent);
+    }
+
+    @Override
+    public void loginFail(String errorMsg) {
+        Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void tokenAuthSucceed() {
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        finish();
+        startActivity(intent);
+    }
+
+    @Override
+    public void tokenAuthFail(String errorMsg) {
+        Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+    }
 }

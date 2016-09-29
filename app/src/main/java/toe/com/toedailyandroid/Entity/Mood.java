@@ -7,6 +7,8 @@ package toe.com.toedailyandroid.Entity;
 public class Mood {
     private String moodType;
     private String moodContent;
+    private String createdBy;
+    private String createdAt;
 
     public Mood() {
 
@@ -25,5 +27,21 @@ public class Mood {
 
     public void setMoodContent(String moodContent) {
         this.moodContent = moodContent;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }
