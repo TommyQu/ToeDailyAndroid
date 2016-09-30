@@ -15,6 +15,8 @@ import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import toe.com.toedailyandroid.Entity.Mood;
 import toe.com.toedailyandroid.Utils.UserAuthDataManager;
@@ -71,10 +73,17 @@ public class MoodService {
         queryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                moods.clear();
                 for (DataSnapshot moodSnapshot: dataSnapshot.getChildren()) {
                     Mood mood = moodSnapshot.getValue(Mood.class);
                     moods.add(mood);
                 }
+//                Sort moods list in descend order by created at
+                Collections.sort(moods, new Comparator<Mood>(){
+                    public int compare(Mood m1, Mood m2) {
+                        return m2.getCreatedAt().compareToIgnoreCase(m1.getCreatedAt());
+                    }
+                });
                 mGetAllMoodsListener.getAllMoodsSucceed(moods);
             }
 

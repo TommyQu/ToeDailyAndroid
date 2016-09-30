@@ -20,6 +20,7 @@ import com.rey.material.widget.Spinner;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import toe.com.toedailyandroid.Adapter.MoodsSpinnerAdapter;
 import toe.com.toedailyandroid.Adapter.NavTabPagerAdapter;
 import toe.com.toedailyandroid.Entity.Mood;
 import toe.com.toedailyandroid.R;
@@ -46,10 +47,10 @@ public class NewMoodActivity extends AppCompatActivity implements MoodService.Ne
         mMoodContentET = (EditText)findViewById(R.id.mood_content);
         mSubmitBtn = (Button)findViewById(R.id.submit_btn);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.mood_type_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mMoodTypeSpin.setAdapter(adapter);
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+//                R.array.mood_type_array, R.layout.mood_spinner_item);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mMoodTypeSpin.setAdapter(new MoodsSpinnerAdapter(NewMoodActivity.this));
 
         mSubmitBtn.setOnClickListener(new View.OnClickListener() {
             @Override

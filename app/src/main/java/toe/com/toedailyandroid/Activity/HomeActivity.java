@@ -30,6 +30,7 @@ public class HomeActivity extends AppCompatActivity {
         mViewPager.setAdapter(new NavTabPagerAdapter(getSupportFragmentManager(), getApplicationContext()));
         mTabLayout.setupWithViewPager(mViewPager);
 
+//        Set tab icon
         mTabLayout.getTabAt(0).setIcon(R.drawable.home_tab);
         mTabLayout.getTabAt(1).setIcon(R.drawable.mood_tab);
         mTabLayout.getTabAt(2).setIcon(R.drawable.schedules_tab);
@@ -41,6 +42,8 @@ public class HomeActivity extends AppCompatActivity {
             else
                 mTabLayout.getTabAt(i).getIcon().setColorFilter(ContextCompat.getColor(HomeActivity.this, R.color.colorDarkGrey), PorterDuff.Mode.SRC_IN);
         }
+
+//        Change tab color when selected or not
         mTabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

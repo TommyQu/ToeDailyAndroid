@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +22,7 @@ import com.firebase.client.Firebase;
 
 import java.util.List;
 
+import toe.com.toedailyandroid.Adapter.MoodsRecyclerViewAdapter;
 import toe.com.toedailyandroid.Entity.Mood;
 import toe.com.toedailyandroid.R;
 import toe.com.toedailyandroid.Service.MoodService;
@@ -31,6 +34,7 @@ import toe.com.toedailyandroid.Service.MoodService;
 public class MoodsFragment extends Fragment implements MoodService.GetAllMoodsListener{
 
     private static final String TAG = "ToeMoodsFragment:";
+    private RecyclerView mRecyclerView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +64,9 @@ public class MoodsFragment extends Fragment implements MoodService.GetAllMoodsLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_moods_fragment,container,false);
+        mRecyclerView = (RecyclerView)view.findViewById(R.id.moods_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         MoodService moodService = new MoodService(getActivity(), this, "getAllMoods");
         moodService.getAllMoods();
         return view;
@@ -67,7 +74,7 @@ public class MoodsFragment extends Fragment implements MoodService.GetAllMoodsLi
 
     @Override
     public void getAllMoodsSucceed(List<Mood> moods) {
-        Log.i(TAG, "aaaaaa");
+        mRecyclerView.setAdapter(new MoodsRecyclerViewAdapter(getActivity(), moods));
     }
 
     @Override
