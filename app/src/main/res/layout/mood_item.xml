@@ -11,29 +11,39 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp">
         <ImageView
             android:id="@+id/mood_img"
-            android:layout_width="20dp"
-            android:layout_height="20dp" />
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
 
         <TextView
             android:id="@+id/mood_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/mood_img"/>
+            android:layout_below="@+id/mood_img"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="3dp"/>
 
         <TextView
             android:id="@+id/mood_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/mood_type"/>
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/mood_img"
+            android:textSize="@dimen/normal_text_size"/>
 
         <TextView
             android:id="@+id/created_at"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/mood_content"/>
+            android:layout_alignBaseline="@+id/mood_type"
+            android:layout_alignParentRight="true"
+            android:textSize="@dimen/small_text_size"/>
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

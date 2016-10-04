@@ -9,21 +9,15 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/colorWhite">
 
-    <com.rey.material.widget.Spinner
+    <Spinner
         android:id="@+id/mood_type_spin"
-        style="@style/Material.Widget.Spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp"
-        app:spn_label="What's in your mind?"
-        app:spn_labelTextColor="@color/colorDarkGrey"
-        app:spn_labelEnable="true"
-        app:rd_style="@style/Material.Drawable.Ripple.Wave"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"/>
 
-    <com.rey.material.widget.EditText
+    <EditText
         android:id="@+id/mood_content"
-        app:et_labelEnable="true"
-        android:hint="Content"
+        android:hint="What's in your mind?"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_below="@id/mood_type_spin"

@@ -38,6 +38,7 @@ public class UserService {
     public interface TokenAuthListener {
         public void tokenAuthSucceed();
         public void tokenAuthFail(String errorMsg);
+        public void noToken(String msg);
     }
 
     public interface SignUpListener {
@@ -93,7 +94,8 @@ public class UserService {
                     mTokenAuthListener.tokenAuthFail(firebaseError.getMessage().toString());
                 }
             });
-        }
+        } else
+            mTokenAuthListener.noToken("No token found!");
     }
 
     public void signUp(String email, String pwd) {

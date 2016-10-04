@@ -5,7 +5,6 @@
     android:id="@+id/activity_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/colorWhite"
     android:orientation="vertical"
     tools:context="toe.com.toedailyandroid.Activity.HomeActivity">

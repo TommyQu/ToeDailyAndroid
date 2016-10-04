@@ -11,6 +11,7 @@ import java.util.List;
 import toe.com.toedailyandroid.Entity.Mood;
 import toe.com.toedailyandroid.Entity.MoodsViewHolder;
 import toe.com.toedailyandroid.R;
+import toe.com.toedailyandroid.Utils.MoodTextImgConverter;
 
 /**
  * Created by HQu on 9/29/2016.
@@ -36,50 +37,12 @@ public class MoodsRecyclerViewAdapter extends RecyclerView.Adapter<MoodsViewHold
 
     @Override
     public void onBindViewHolder(MoodsViewHolder holder, int position) {
+        MoodTextImgConverter converter = new MoodTextImgConverter();
         holder.mMoodTypeTV.setText(mMoods.get(position).getMoodType());
         holder.mMoodContentTV.setText(mMoods.get(position).getMoodContent());
         holder.mCreatedAtTV.setText(mMoods.get(position).getCreatedAt());
-        switch (mMoods.get(position).getMoodType()) {
-            case "Happy":
-                holder.mMoodImgTV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.happy));
-                break;
-            case "Wink":
-                holder.mMoodImgTV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.wink));
-                break;
-            case "Love":
-                holder.mMoodImgTV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.love));
-                break;
-            case "Joy":
-                holder.mMoodImgTV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.joy));
-                break;
-            case "Shy":
-                holder.mMoodImgTV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.shy));
-                break;
-            case "Sad":
-                holder.mMoodImgTV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.sad));
-                break;
-            case "Angry":
-                holder.mMoodImgTV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.angry));
-                break;
-            case "Dead":
-                holder.mMoodImgTV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.dead));
-                break;
-            case "Embarrass":
-                holder.mMoodImgTV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.embarrass));
-                break;
-            case "Cry":
-                holder.mMoodImgTV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cry));
-                break;
-            case "Sleepy":
-                holder.mMoodImgTV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.sleepy));
-                break;
-            case "Surprise":
-                holder.mMoodImgTV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.surprise));
-                break;
-            default:
-                break;
-        }
-
+        int drawableImg = converter.convertToImg(mMoods.get(position).getMoodType());
+        holder.mMoodImgTV.setImageDrawable(mContext.getResources().getDrawable(drawableImg));
     }
 
 

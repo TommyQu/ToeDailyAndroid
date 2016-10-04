@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -21,6 +22,7 @@ import com.google.gson.Gson;
 
 import toe.com.toedailyandroid.R;
 import toe.com.toedailyandroid.Service.UserService;
+import toe.com.toedailyandroid.Utils.TDADialog;
 import toe.com.toedailyandroid.Utils.TextValidator;
 
 
@@ -30,6 +32,7 @@ public class LoginActivity extends AppCompatActivity implements UserService.Logi
     private EditText mPwdEditText;
     private Button mLoginBtn;
     private Button mSignUpBtn;
+    private TDADialog mTDADialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +44,9 @@ public class LoginActivity extends AppCompatActivity implements UserService.Logi
         mPwdEditText = (EditText)findViewById(R.id.pwd);
         mLoginBtn = (Button)findViewById(R.id.login_btn);
         mSignUpBtn = (Button)findViewById(R.id.sign_up_btn);
+        mTDADialog = new TDADialog();
 
+        mTDADialog.showProgessDialog(LoginActivity.this, "Logging in");
         UserService userService = new UserService(LoginActivity.this, LoginActivity.this, "tokenAuth");
         userService.tokenAuth();
 
@@ -66,6 +71,7 @@ public class LoginActivity extends AppCompatActivity implements UserService.Logi
             public void onClick(View v) {
                 String email = mEmailEditText.getText().toString();
                 String pwd = mPwdEditText.getText().toString();
+                mTDADialog.showProgessDialog(LoginActivity.this, "Logging in");
                 UserService userService = new UserService(LoginActivity.this, LoginActivity.this, "login");
                 userService.login(email, pwd);
             }
@@ -91,11 +97,13 @@ public class LoginActivity extends AppCompatActivity implements UserService.Logi
         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
         finish();
         startActivity(intent);
+        mTDADialog.dismiss();
     }
 
     @Override
     public void loginFail(String errorMsg) {
         Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+        mTDADialog.dismiss();
     }
 
     @Override
@@ -103,10 +111,18 @@ public class LoginActivity extends AppCompatActivity implements UserService.Logi
         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
         finish();
         startActivity(intent);
+        mTDADialog.dismiss();
     }
 
     @Override
     public void tokenAuthFail(String errorMsg) {
         Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+        mTDADialog.dismiss();
+    }
+
+    @Override
+    public void noToken(String msg) {
+        Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
+        mTDADialog.dismiss();
     }
 }

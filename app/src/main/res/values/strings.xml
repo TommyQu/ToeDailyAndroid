@@ -7,8 +7,20 @@
     <string name="cancel">Cancel</string>
     <string name="home_tab">Home</string>
     <string name="sign_out">Sign Out</string>
+    <string name="google_api_key">AIzaSyCTgyapQGAOqn1nK8VnYY9j-Nqnv5WuObc</string>
     <string-array name="mood_type_array">
         <item>Happy</item>
+        <item>Wink</item>
+        <item>Love</item>
+        <item>Joy</item>
+        <item>Shy</item>
         <item>Sad</item>
+        <item>Angry</item>
+        <item>Dead</item>
+        <item>Embarrass</item>
+        <item>Cry</item>
+        <item>Sleepy</item>
+        <item>Surprise</item>
     </string-array>
+
 </resources>
