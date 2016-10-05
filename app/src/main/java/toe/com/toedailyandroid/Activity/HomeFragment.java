@@ -39,6 +39,7 @@ import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 import toe.com.toedailyandroid.R;
 import toe.com.toedailyandroid.Utils.TDAHttpClient;
+import toe.com.toedailyandroid.Utils.WeahterTextImgConverter;
 
 /**
  * Created by HQu on 9/27/2016.
@@ -58,6 +59,16 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
     private TextView mTodaysHumidityTV;
     private TextView mTodaysWindTV;
     private TextView mTodaysWeatherConditionsTV;
+
+    private ImageView mTomorrowConditionsIM;
+    private TextView mTomorrowTemperatureTV;
+    private ImageView mTwoDayConditionsIM;
+    private TextView mTwoDayDateTV;
+    private TextView  mTwoDayTempTV;
+    private ImageView mThreeDayConditionsIM;
+    private TextView mThreeDayDateTV;
+    private TextView  mThreeDayTempTV;
+
     private String mTodaysWeather;
     private JsonParser mJsonParser;
 
@@ -65,7 +76,6 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mJsonParser = new JsonParser();
-        initRequest();
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                     .addConnectionCallbacks(this)
@@ -86,6 +96,14 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
         mTodaysHumidityTV = (TextView)view.findViewById(R.id.todays_humidity);
         mTodaysWindTV = (TextView)view.findViewById(R.id.todays_wind);
         mTodaysWeatherConditionsTV = (TextView)view.findViewById(R.id.weather_conditions);
+        mTomorrowConditionsIM = (ImageView) view.findViewById(R.id.tomorrow_conditions);
+        mTomorrowTemperatureTV = (TextView)view.findViewById(R.id.tomorrow_temp);
+        mTwoDayConditionsIM = (ImageView) view.findViewById(R.id.two_day_conditions);
+        mTwoDayDateTV = (TextView) view.findViewById(R.id.two_day_date);
+        mTwoDayTempTV = (TextView)view.findViewById(R.id.two_day_temp);
+        mThreeDayConditionsIM = (ImageView) view.findViewById(R.id.three_day_conditions);
+        mThreeDayDateTV = (TextView) view.findViewById(R.id.three_day_date);
+        mThreeDayTempTV = (TextView)view.findViewById(R.id.three_day_temp);
 
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,30 +174,28 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
             @Override
             public void onResponse(String response) {
                 JsonArray fcArray = mJsonParser.parse(response).getAsJsonObject().getAsJsonObject("forecast").getAsJsonObject("simpleforecast").getAsJsonArray("forecastday");
+
+//                Display today's weather
                 mTodaysWeather = fcArray.get(0).getAsJsonObject().get("icon").getAsString();
                 mTodaysWeatherConditionsTV.setText(fcArray.get(0).getAsJsonObject().get("conditions").getAsString());
                 Log.i(TAG, mTodaysWeather);
-                try {
-                    switch (mTodaysWeather) {
-                        case "partlycloudy":
-                            mWeatherGif.setImageResource(R.drawable.partly_cloudy);
-                            break;
-                        case "clear":
-                            mWeatherGif.setImageResource(R.drawable.sunny_gif);
-                            break;
-                        default:
-//                        mWeatherIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.sunny));
-                            break;
-                    }
-                } catch (Exception e) {
 
-                }
+                mWeatherGif.setImageResource(WeahterTextImgConverter.convertToImg(mTodaysWeather));
 
-                String low = fcArray.get(0).getAsJsonObject().getAsJsonObject("low").get("fahrenheit").getAsString();
-                String high =fcArray.get(0).getAsJsonObject().getAsJsonObject("high").get("fahrenheit").getAsString();
-                mTodaysTemperatureTV.setText(low+" F - "+high+" F");
+                mTodaysTemperatureTV.setText(fcArray.get(0).getAsJsonObject().getAsJsonObject("low").get("fahrenheit").getAsString()+" F - "+fcArray.get(0).getAsJsonObject().getAsJsonObject("high").get("fahrenheit").getAsString()+" F");
                 mTodaysHumidityTV.setText(fcArray.get(0).getAsJsonObject().get("avehumidity").getAsString());
                 mTodaysWindTV.setText(fcArray.get(0).getAsJsonObject().getAsJsonObject("maxwind").get("mph").getAsString()+" mph");
+
+//                Forecast weather is 3 days
+                mTomorrowConditionsIM.setImageResource(WeahterTextImgConverter.convertToImg(fcArray.get(1).getAsJsonObject().get("conditions").getAsString()));
+                mTomorrowTemperatureTV.setText(fcArray.get(1).getAsJsonObject().getAsJsonObject("low").get("fahrenheit").getAsString()+" F - "+fcArray.get(1).getAsJsonObject().getAsJsonObject("high").get("fahrenheit").getAsString()+" F");
+                mTwoDayConditionsIM.setImageResource(WeahterTextImgConverter.convertToImg(fcArray.get(2).getAsJsonObject().get("conditions").getAsString()));
+                mTwoDayDateTV.setText(fcArray.get(2).getAsJsonObject().getAsJsonObject("date").get("month").getAsString()+"/"+fcArray.get(2).getAsJsonObject().getAsJsonObject("date").get("day").getAsString()+" "+fcArray.get(2).getAsJsonObject().getAsJsonObject("date").get("weekday").getAsString());
+                mTwoDayTempTV.setText(fcArray.get(2).getAsJsonObject().getAsJsonObject("low").get("fahrenheit").getAsString()+" F - "+fcArray.get(2).getAsJsonObject().getAsJsonObject("high").get("fahrenheit").getAsString()+" F");
+                mThreeDayConditionsIM.setImageResource(WeahterTextImgConverter.convertToImg(fcArray.get(3).getAsJsonObject().get("conditions").getAsString()));
+                mThreeDayDateTV.setText(fcArray.get(3).getAsJsonObject().getAsJsonObject("date").get("month").getAsString()+"/"+fcArray.get(3).getAsJsonObject().getAsJsonObject("date").get("day").getAsString()+" "+fcArray.get(3).getAsJsonObject().getAsJsonObject("date").get("weekday").getAsString());
+                mThreeDayTempTV.setText(fcArray.get(3).getAsJsonObject().getAsJsonObject("low").get("fahrenheit").getAsString()+" F - "+fcArray.get(3).getAsJsonObject().getAsJsonObject("high").get("fahrenheit").getAsString()+" F");
+
             }
         }, new Response.ErrorListener() {
             @Override
