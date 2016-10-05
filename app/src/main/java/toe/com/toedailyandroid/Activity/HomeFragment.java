@@ -57,6 +57,7 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
     private TextView mTodaysTemperatureTV;
     private TextView mTodaysHumidityTV;
     private TextView mTodaysWindTV;
+    private TextView mTodaysWeatherConditionsTV;
     private String mTodaysWeather;
     private JsonParser mJsonParser;
 
@@ -71,6 +72,7 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API).build();
         }
+
     }
 
     @Override
@@ -83,6 +85,7 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
         mTodaysTemperatureTV = (TextView)view.findViewById(R.id.todays_temperature);
         mTodaysHumidityTV = (TextView)view.findViewById(R.id.todays_humidity);
         mTodaysWindTV = (TextView)view.findViewById(R.id.todays_wind);
+        mTodaysWeatherConditionsTV = (TextView)view.findViewById(R.id.weather_conditions);
 
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +99,7 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
 
     @Override
     public void onStart() {
+        initRequest();
         super.onStart();
     }
 
@@ -153,11 +157,12 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
             public void onResponse(String response) {
                 JsonArray fcArray = mJsonParser.parse(response).getAsJsonObject().getAsJsonObject("forecast").getAsJsonObject("simpleforecast").getAsJsonArray("forecastday");
                 mTodaysWeather = fcArray.get(0).getAsJsonObject().get("icon").getAsString();
+                mTodaysWeatherConditionsTV.setText(fcArray.get(0).getAsJsonObject().get("conditions").getAsString());
                 Log.i(TAG, mTodaysWeather);
                 try {
                     switch (mTodaysWeather) {
                         case "partlycloudy":
-//                        mWeatherIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cloudy));
+                            mWeatherGif.setImageResource(R.drawable.partly_cloudy);
                             break;
                         case "clear":
                             mWeatherGif.setImageResource(R.drawable.sunny_gif);

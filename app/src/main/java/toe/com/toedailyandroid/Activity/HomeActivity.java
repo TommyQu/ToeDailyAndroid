@@ -50,6 +50,11 @@ public class HomeActivity extends AppCompatActivity {
         mTabLayout.getTabAt(2).setIcon(R.drawable.schedules_tab);
         mTabLayout.getTabAt(3).setIcon(R.drawable.profile_tab);
 
+//        Keep home page state to avoid so many api calls
+        mViewPager.setOffscreenPageLimit(0);
+        mViewPager.setOffscreenPageLimit(1);
+        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setOffscreenPageLimit(3);
         for (int i = 0; i < mTabLayout.getTabCount(); i++) {
             if (i == 0)
                 mTabLayout.getTabAt(i).getIcon().setColorFilter(ContextCompat.getColor(HomeActivity.this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
