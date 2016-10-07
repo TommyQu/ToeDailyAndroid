@@ -5,6 +5,8 @@ package toe.com.toedailyandroid.Entity;
  */
 
 public class Mood {
+
+    private String id;
     private String moodType;
     private String moodContent;
     private String createdBy;
@@ -13,6 +15,15 @@ public class Mood {
     public Mood() {
 
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getMoodType() {
         return moodType;
     }

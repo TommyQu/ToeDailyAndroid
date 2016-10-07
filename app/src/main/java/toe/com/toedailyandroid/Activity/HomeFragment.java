@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -116,13 +117,21 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     @Override
+    public void onResume() {
+        Log.i(TAG, "resume");
+        super.onResume();
+    }
+
+    @Override
     public void onStart() {
+        Log.i(TAG, "start");
         initRequest();
         super.onStart();
     }
 
     @Override
     public void onStop() {
+        Log.i(TAG, "stop");
         mGoogleApiClient.disconnect();
         if (mRequestQueue != null) {
             mRequestQueue.cancelAll(TAG);
@@ -182,19 +191,19 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
 
                 mWeatherGif.setImageResource(WeahterTextImgConverter.convertToImg(mTodaysWeather));
 
-                mTodaysTemperatureTV.setText(fcArray.get(0).getAsJsonObject().getAsJsonObject("low").get("fahrenheit").getAsString()+" F - "+fcArray.get(0).getAsJsonObject().getAsJsonObject("high").get("fahrenheit").getAsString()+" F");
+                mTodaysTemperatureTV.setText(fcArray.get(0).getAsJsonObject().getAsJsonObject("low").get("fahrenheit").getAsString()+" ℉ - "+fcArray.get(0).getAsJsonObject().getAsJsonObject("high").get("fahrenheit").getAsString()+" ℉");
                 mTodaysHumidityTV.setText(fcArray.get(0).getAsJsonObject().get("avehumidity").getAsString());
                 mTodaysWindTV.setText(fcArray.get(0).getAsJsonObject().getAsJsonObject("maxwind").get("mph").getAsString()+" mph");
 
 //                Forecast weather is 3 days
                 mTomorrowConditionsIM.setImageResource(WeahterTextImgConverter.convertToImg(fcArray.get(1).getAsJsonObject().get("conditions").getAsString()));
-                mTomorrowTemperatureTV.setText(fcArray.get(1).getAsJsonObject().getAsJsonObject("low").get("fahrenheit").getAsString()+" F - "+fcArray.get(1).getAsJsonObject().getAsJsonObject("high").get("fahrenheit").getAsString()+" F");
+                mTomorrowTemperatureTV.setText(fcArray.get(1).getAsJsonObject().getAsJsonObject("low").get("fahrenheit").getAsString()+" ℉ - "+fcArray.get(1).getAsJsonObject().getAsJsonObject("high").get("fahrenheit").getAsString()+" ℉");
                 mTwoDayConditionsIM.setImageResource(WeahterTextImgConverter.convertToImg(fcArray.get(2).getAsJsonObject().get("conditions").getAsString()));
                 mTwoDayDateTV.setText(fcArray.get(2).getAsJsonObject().getAsJsonObject("date").get("month").getAsString()+"/"+fcArray.get(2).getAsJsonObject().getAsJsonObject("date").get("day").getAsString()+" "+fcArray.get(2).getAsJsonObject().getAsJsonObject("date").get("weekday").getAsString());
-                mTwoDayTempTV.setText(fcArray.get(2).getAsJsonObject().getAsJsonObject("low").get("fahrenheit").getAsString()+" F - "+fcArray.get(2).getAsJsonObject().getAsJsonObject("high").get("fahrenheit").getAsString()+" F");
+                mTwoDayTempTV.setText(fcArray.get(2).getAsJsonObject().getAsJsonObject("low").get("fahrenheit").getAsString()+" ℉ - "+fcArray.get(2).getAsJsonObject().getAsJsonObject("high").get("fahrenheit").getAsString()+" ℉");
                 mThreeDayConditionsIM.setImageResource(WeahterTextImgConverter.convertToImg(fcArray.get(3).getAsJsonObject().get("conditions").getAsString()));
                 mThreeDayDateTV.setText(fcArray.get(3).getAsJsonObject().getAsJsonObject("date").get("month").getAsString()+"/"+fcArray.get(3).getAsJsonObject().getAsJsonObject("date").get("day").getAsString()+" "+fcArray.get(3).getAsJsonObject().getAsJsonObject("date").get("weekday").getAsString());
-                mThreeDayTempTV.setText(fcArray.get(3).getAsJsonObject().getAsJsonObject("low").get("fahrenheit").getAsString()+" F - "+fcArray.get(3).getAsJsonObject().getAsJsonObject("high").get("fahrenheit").getAsString()+" F");
+                mThreeDayTempTV.setText(fcArray.get(3).getAsJsonObject().getAsJsonObject("low").get("fahrenheit").getAsString()+" ℉ - "+fcArray.get(3).getAsJsonObject().getAsJsonObject("high").get("fahrenheit").getAsString()+" ℉");
 
             }
         }, new Response.ErrorListener() {

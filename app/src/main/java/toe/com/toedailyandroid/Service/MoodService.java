@@ -8,11 +8,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.firebase.client.AuthData;
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +32,7 @@ public class MoodService {
     private static final String TAG = "ToeMoodService:";
     private NewMoodListener mNewMoodListener;
     private GetAllMoodsListener mGetAllMoodsListener;
+    private DeleteMoodListener mDeleteMoodListener;
     private Context mContext;
 
     public MoodService(Context context, Object moodListener, String action) {
@@ -37,6 +41,8 @@ public class MoodService {
             mGetAllMoodsListener = (GetAllMoodsListener)moodListener;
         else if(action.equalsIgnoreCase("newMood"))
             mNewMoodListener = (NewMoodListener)moodListener;
+        else if(action.equalsIgnoreCase("deleteMood"))
+            mDeleteMoodListener = (DeleteMoodListener) moodListener;
     }
 
     public interface GetAllMoodsListener {
@@ -47,6 +53,11 @@ public class MoodService {
     public interface NewMoodListener {
         public void newMoodSucceed();
         public void newMoodFail(String errorMsg);
+    }
+
+    public interface DeleteMoodListener {
+        public void deleteMoodSucceed();
+        public void deleteMoodFail(String errorMsg);
     }
 
     public void newMood(Mood mood) {
@@ -76,6 +87,7 @@ public class MoodService {
                 moods.clear();
                 for (DataSnapshot moodSnapshot: dataSnapshot.getChildren()) {
                     Mood mood = moodSnapshot.getValue(Mood.class);
+                    mood.setId(moodSnapshot.getKey());
                     moods.add(mood);
                 }
 //                Sort moods list in descend order by created at
@@ -92,6 +104,19 @@ public class MoodService {
                 mGetAllMoodsListener.getAllMoodsFail(firebaseError.getMessage().toString());
             }
         });
+    }
 
+    public void deleteMood(String id) {
+        String url ="https://toedailyandroid.firebaseio.com/mood/"+id;
+        Firebase ref = new Firebase(url);
+        ref.removeValue(new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                if(firebaseError == null)
+                    mDeleteMoodListener.deleteMoodSucceed();
+                else
+                    mDeleteMoodListener.deleteMoodFail(firebaseError.getMessage().toString());
+            }
+        });
     }
 }

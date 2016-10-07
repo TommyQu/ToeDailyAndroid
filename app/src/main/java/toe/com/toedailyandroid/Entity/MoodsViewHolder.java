@@ -1,5 +1,6 @@
 package toe.com.toedailyandroid.Entity;
 
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ public class MoodsViewHolder extends RecyclerView.ViewHolder {
     public TextView mMoodTypeTV;
     public TextView mMoodContentTV;
     public TextView mCreatedAtTV;
+    public ImageView mDeleteIM;
 
     public MoodsViewHolder(View itemView) {
         super(itemView);
@@ -24,5 +26,6 @@ public class MoodsViewHolder extends RecyclerView.ViewHolder {
         mMoodTypeTV = (TextView)itemView.findViewById(R.id.mood_type);
         mMoodContentTV = (TextView)itemView.findViewById(R.id.mood_content);
         mCreatedAtTV = (TextView)itemView.findViewById(R.id.created_at);
+        mDeleteIM = (ImageView)itemView.findViewById(R.id.delete_im);
     }
 }
