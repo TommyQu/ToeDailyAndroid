@@ -14,6 +14,8 @@ public class WeahterTextImgConverter {
                 return R.drawable.partly_cloudy;
             case "clear":
                 return R.drawable.sunny_gif;
+            case "chancerain":
+                return R.drawable.rainy;
             default:
                 return R.drawable.sunny;
         }
