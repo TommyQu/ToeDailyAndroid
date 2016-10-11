@@ -73,7 +73,7 @@ public class NewMoodActivity extends AppCompatActivity implements MoodService.Ne
                     TextView textView = (TextView) mMoodTypeSpin.getSelectedView().findViewById(R.id.mood_type_text);
                     String moodType = textView.getText().toString();
                     String moodContent = mMoodContentET.getText().toString();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
                     Date date = new Date();
                     Mood mood = new Mood();
                     mood.setMoodType(moodType);
